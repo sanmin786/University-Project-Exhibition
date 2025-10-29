@@ -1,0 +1,54 @@
+# version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html
+      # - /var/www/html/vendor
+      # - /var/www/html/node_modules
+    ports:
+      - "8080:80"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_KEY=base64:ZsB3t8dq94TEuyPuqPq76OwUq3UVo/ZxPcP2TvCDNkE=
+      - DB_CONNECTION=mysql
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_DATABASE=university_projects
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - SCOUT_DRIVER=meilisearch
+      - MEILISEARCH_HOST=http://meilisearch:7700
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: mysql:8.0
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=university_projects
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_HOST=%
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    volumes:
+      - ./docker/meili_data:/meili_data
+    ports:
+      - "7700:7700"   # Meilisearch runs at localhost:7700
+    environment:
+      - MEILI_ENV=development
+      - MEILI_NO_ANALYTICS=true

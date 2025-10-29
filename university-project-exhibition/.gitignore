@@ -1,0 +1,41 @@
+# Dependencies
+/vendor/
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Laravel specific
+/public/storage
+/public/hot
+/storage/*.key
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+auth.json
+/.vagrant
+
+# Build output
+/public/build
+
+# Docker & Database
+/docker/mysql/data/*
+!/docker/mysql/data/.gitkeep
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.phpactor.json
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
